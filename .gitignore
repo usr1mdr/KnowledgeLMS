@@ -1,2 +1,21 @@
 .| venv
 .| pycache
+venv
+/venv
+\venv
+./venv
+.\venv
+
+__pycache__
+/__pycache__
+\__pycache__
+./__pycache__
+.\__pycache__
+__pycache__
+
+/pycache
+\pycache
+./pycache
+.\pycache
+__pycache__
+*.pyc
