@@ -1,9 +1,10 @@
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, MetaData
 from sqlalchemy.orm import sessionmaker, relationship, DeclarativeBase, declarative_base
 from sqlalchemy import Column, Integer, String, ForeignKey
 
-# class KGraph():
-Base = declarative_base()
+# https://docs.sqlalchemy.org/en/13/orm/extensions/declarative/basic_use.html
+mymetadata = MetaData()
+Base = declarative_base(metadata=mymetadata)
 class Node(Base):
     __tablename__ = "node"
 
@@ -14,7 +15,6 @@ class Node(Base):
 
     def lower_neighbors(self):
         return [x.lower_node for x in self.higher_edges]
-
 
 class Edge(Base):
     __tablename__ = "edge"
@@ -35,37 +35,10 @@ class Edge(Base):
         self.lower_node = n1
         self.higher_node = n2
 
+class PageContent(Base):
+    __tablename__ = "page"
 
-# engine = create_engine("sqlite://", echo=True)
-# Base.metadata.create_all(engine)
+    page_id = Column(Integer, ForeignKey("node.node_id"), primary_key = True)
+    page_url = Column(String)
+    page_content = Column(String)
 
-# session = sessionmaker(engine)()
-
-# create a directed graph like this:
-#       n1 -> n2 -> n1
-#                -> n5
-#                -> n7
-#          -> n3 -> n6
-
-# n1 = Node()
-# n2 = Node()
-# n3 = Node()
-# n4 = Node()
-# n5 = Node()
-# n6 = Node()
-# n7 = Node()
-
-# Edge(n1, n2)
-# Edge(n1, n3)
-# Edge(n2, n1)
-# Edge(n2, n5)
-# Edge(n2, n7)
-# Edge(n3, n6)
-
-# session.add_all([n1, n2, n3, n4, n5, n6, n7])
-# session.commit()
-
-# assert [x for x in n3.higher_neighbors()] == [n6]
-# assert [x for x in n3.lower_neighbors()] == [n1]
-# assert [x for x in n2.lower_neighbors()] == [n1]
-# assert [x for x in n2.higher_neighbors()] == [n1, n5, n7]

@@ -5,33 +5,54 @@ from selenium.webdriver.chrome.options import Options
 import time
 from bs4 import BeautifulSoup
 import sqlalchemy
+import requests
 
-options = Options() 
-options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36 Edg/129.0.0.0")
-driver = webdriver.Chrome(options = options)
-driver.get("https://www.matterport.com")
-# assert "Python" in driver.title
+class Scrape():
 
-page_source = ''
-try:
-    page_source = driver.page_source
-except Exception as e:
-    print("Error: ", e)
+    def __init__(self,url):
 
-soup = BeautifulSoup(page_source)
-out = soup.find_all("a")
+        self.url_array = []
+        self.page_source = ''
+        self.success_flag = False
+        r = requests.get(url)
+        if r.status_code == 200:
+            self.success_flag == True
+        self.url_array.append()
+    
+    def scrape(self):
 
-count = 0
-for item in out:
-    count += 1
-    # print(item)
-print(count)
+        if self.success_flag == True:
+            options = Options() 
+            options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36 Edg/129.0.0.0")
+            driver = webdriver.Chrome(options = options)
+            r = driver.get(self.url_array[0])
 
-# for item in elem:
-    # print(item)
+        # assert "Python" in driver.title
+            try:
+                self.page_source = driver.page_source
+            except Exception as e:
+                print("Error: ", e)
 
-# print(elem)
-time.sleep(5)
-driver.close()
+    def parse(self):
+            
+            parsed = []
+            if self.page_source:
+                soup = BeautifulSoup(self.page_source, features="lxml")
+            out = soup.find_all("a")
+            for link in out:
+                parsed.append(str(link.get('href')))
 
-# with open ("links.txt", "w") as f:(str(elem))
+            count = 0
+            for item in parsed:
+                count += 1
+                print(item)
+
+                time.sleep(5)
+                driver.close()
+
+
+url = "https://matterport.com/solutions/property-marketing"
+x = Scrape()
+x.scrape(url)
+        
+        # with open ("links.txt", "w") as f:(str(elem))

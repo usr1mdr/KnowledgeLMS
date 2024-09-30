@@ -1,32 +1,33 @@
 from db import database_query
-from dag import Node
+from test import Scrape
+from dag import Node, Edge, Base, mymetadata
 from sqlalchemy.orm import declarative_base
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, Session
 from sqlalchemy import create_engine, select
 
-# db_instance = database_query()
-# db_instance.select_func()
-# node = Node()
-# table_in = node
-
-# Base = declarative_base()
-# engine = create_engine("sqlite://", echo=True)
-# Base.metadata.create_all(engine)
-
-# session = sessionmaker(engine)()
+# url = 'https://www.matterport.com'
+# scrape = Scrape()
+engine = create_engine('sqlite://')
+Base.metadata.create_all(engine)
+session = sessionmaker(engine)()
 
 n1 = Node()
-# session.add_all([n1])
-# session.commit()
-stmt = select(Node)
-print(stmt)
+n2 = Node()
+n3 = Node()
+Edge(n1,n2)
+Edge(n2,n3)
+table_nodes = n1.__table__
+table_edges = Edge.__table__
+session.add_all([n1,n2])
+session.commit()
 
-engine = create_engine('sqlite://')
+out = select(table_edges)
+sel_com = session.execute(out)
+for item in sel_com:
+    print(item)
 
-with Session(engine) as session:
-    for row in conn.execute(stmt):
-        print(row)
+for item in mymetadata.sorted_tables:
+    print(item.c)
+    # print(item.name)
 
-# db_instance = database_query()
-# db_instance.select_func(Node())
-
+assert [x for x in n2.lower_neighbors()] == [n1]
