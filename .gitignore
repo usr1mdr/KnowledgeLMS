@@ -19,3 +19,15 @@ __pycache__
 .\pycache
 __pycache__
 *.pyc
+
+/second_round/audio
+/second_round/audio_archive
+\second_round\audio
+\second_round\audio_archive
+/second_round/"Text Files"
+\second_round\"Text Files"
+
+notes.txt
+
+/first_round_archive
+\first_round_archive
